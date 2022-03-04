@@ -1,64 +1,78 @@
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "../../Stylesheets/Carousel.scss";
+
 import React, {useEffect, useState} from "react";
+import {Carousel} from "react-responsive-carousel";
 import styled from "styled-components";
 
-import {chartLabelCutOff} from "../../Scripts/Constants";
-import {bentoBoxRed} from "../../StyledComponents/Constants";
-import {Board, TradingSummaryChart} from ".";
+import {CollectionCard} from ".";
 
 const StyledDiv = styled.div`
 	display: flex;
-	height: 460px;
 	padding-bottom: 20px;
+	flex-direction: column;
+`;
+
+const CollectionSet = styled.div`
+	display: flex;
+	min-height: 350px;
 `;
 
 export const TradingPicks = ({collections}) => {
-	const [currentCollectionIndex, setCurrentCollectionIndex] = useState(0);
+	const [collectionsSet, setCollectionsSet] = useState([]);
+	const totalCollectionsCount = 12;
+	const setsOnLargeScreen = 3;
+	const setsOnMediumScreen = 4;
+	const setsOnSmallScreen = 12;
+	const screenSize = {
+		large: 1280,
+		medium: 768,
+	};
 
 	useEffect(() => {
-		setCurrentCollectionIndex(0);
-	}, []);
-
-	const getChartData = () => {
-		const names = collections.map((filteredCollection) => {
-			if (filteredCollection.name.length > chartLabelCutOff)
-				return `${filteredCollection.name.slice(0, chartLabelCutOff)}...`;
-			return filteredCollection.name;
-		});
-		const saleCounts = collections.map((filteredCollection) =>
-			parseInt(filteredCollection.count)
-		);
-		return {
-			labels: names,
-			datasets: [
-				{
-					label: "Number of sales",
-					data: saleCounts,
-					backgroundColor: `${bentoBoxRed}`,
-					borderWidth: 1,
-				},
-			],
+		const spliceCollectionIntoChunks = (chunkSize) => {
+			const splicedArray = [];
+			const collectionArray = [...collections];
+			while (collectionArray.length > 0) {
+				const chunk = collectionArray.splice(0, chunkSize);
+				splicedArray.push(chunk);
+			}
+			setCollectionsSet(splicedArray);
 		};
-	};
 
-	const updateSelectedCollection = (index) => {
-		if (index !== currentCollectionIndex) setCurrentCollectionIndex(index);
-	};
+		const handleResize = () => {
+			const width = Number(window.innerWidth);
+			if (width >= screenSize.large) {
+				spliceCollectionIntoChunks(totalCollectionsCount / setsOnLargeScreen);
+			} else if (width < screenSize.large && width >= screenSize.medium) {
+				spliceCollectionIntoChunks(totalCollectionsCount / setsOnMediumScreen);
+			} else if (width < screenSize.medium) {
+				spliceCollectionIntoChunks(totalCollectionsCount / setsOnSmallScreen);
+			}
+		};
 
-	const chartData = getChartData();
+		window.addEventListener("resize", handleResize);
+		handleResize();
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, [collections, screenSize.large, screenSize.medium]);
 
 	return (
 		<StyledDiv>
-			<TradingSummaryChart
-				chartData={chartData}
-				updateSelectedCollection={updateSelectedCollection}
-				collectionNames={collections.map((collection) => collection.name)}
-			/>
-			<Board
-				currentCollection={
-					collections ? collections[currentCollectionIndex] : null
-				}
-				rank={currentCollectionIndex + 1}
-			/>
+			<Carousel
+				emulateTouch={true}
+				showArrows={false}
+				showStatus={false}
+				showThumbs={false}
+			>
+				{collectionsSet.map((collectionSet, index) => (
+					<CollectionSet key={index}>
+						{collectionSet.map((collection) => (
+							<CollectionCard collection={collection} key={collection.name} />
+						))}
+					</CollectionSet>
+				))}
+			</Carousel>
 		</StyledDiv>
 	);
 };

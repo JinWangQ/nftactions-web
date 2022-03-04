@@ -6,6 +6,7 @@ import {StyledIcon} from "../../StyledComponents";
 import {
 	bentoBoxRed,
 	boardBackgroundColor,
+	sizeBreakpoints,
 } from "../../StyledComponents/Constants";
 import {NameAndLogo, Navigation, SocialMediaIcons} from ".";
 
@@ -13,19 +14,25 @@ const StyledHeader = styled.header`
 	display: flex;
 	align-items: center;
 	position: relative;
-	padding: 1rem 0;
 	background-color: ${boardBackgroundColor};
+	@media (max-width: ${sizeBreakpoints.mobileL}) {
+		padding: 0.5rem 0;
+	}
 `;
 
 const CollectionLogo = styled.div`
 	background-color: ${bentoBoxRed};
-	width: 60px;
-	height: 60px;
+	width: 48px;
+	height: 48px;
 	border-radius: 50%;
 	margin-top: 5px;
 	margin-right: 5px;
 	text-align: center;
 	font-size: 15px;
+	@media (max-width: ${sizeBreakpoints.mobileL}) {
+		width: 40px;
+		height: 40px;
+	}
 `;
 
 const StyledSecondaryNav = styled.div`
@@ -42,13 +49,16 @@ const StyledLink = styled(Link)`
 	&:hover {
 		cursor: pointer;
 	}
+	@media (max-width: ${sizeBreakpoints.mobileL}) {
+		font-size: 12px;
+	}
 `;
 
 export const Header = () => (
 	<StyledHeader>
 		<Navigation>
 			<NameAndLogo>
-				<CollectionLogo>logo</CollectionLogo>
+				<CollectionLogo></CollectionLogo>
 				Bento
 			</NameAndLogo>
 			<StyledSecondaryNav>

@@ -10,6 +10,7 @@ import {SocialPicks, TradingPicks} from ".";
 
 const StyledMain = styled.main`
 	height: 100%;
+	margin-top: 10px;
 `;
 
 const StyleTweetWrapper = styled.div`
@@ -24,7 +25,7 @@ const TweetsSection = styled.div`
 
 export const DashBoard = () => {
 	const saleCountCutoff = 1;
-	const numberOfCollectionsToShow = 10;
+	const numberOfCollectionsToShow = 12;
 	const tweetsPerSection = 5;
 	// mock using 10
 	const tweetsPerFetch = 20;
