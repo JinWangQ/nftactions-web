@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import {Carousel} from "react-responsive-carousel";
 import styled from "styled-components";
 
+import {picksOnScreen, screenSize} from "../../StyledComponents/Constants";
 import {CollectionCard} from ".";
 
 const StyledDiv = styled.div`
@@ -20,14 +21,7 @@ const CollectionSet = styled.div`
 
 export const TradingPicks = ({collections}) => {
 	const [collectionsSet, setCollectionsSet] = useState([]);
-	const totalCollectionsCount = 12;
-	const setsOnLargeScreen = 3;
-	const setsOnMediumScreen = 4;
-	const setsOnSmallScreen = 12;
-	const screenSize = {
-		large: 1280,
-		medium: 768,
-	};
+	const totalCollection = 12;
 
 	useEffect(() => {
 		const spliceCollectionIntoChunks = (chunkSize) => {
@@ -43,11 +37,11 @@ export const TradingPicks = ({collections}) => {
 		const handleResize = () => {
 			const width = Number(window.innerWidth);
 			if (width >= screenSize.large) {
-				spliceCollectionIntoChunks(totalCollectionsCount / setsOnLargeScreen);
+				spliceCollectionIntoChunks(picksOnScreen.large);
 			} else if (width < screenSize.large && width >= screenSize.medium) {
-				spliceCollectionIntoChunks(totalCollectionsCount / setsOnMediumScreen);
+				spliceCollectionIntoChunks(picksOnScreen.medium);
 			} else if (width < screenSize.medium) {
-				spliceCollectionIntoChunks(totalCollectionsCount / setsOnSmallScreen);
+				spliceCollectionIntoChunks(picksOnScreen.small);
 			}
 		};
 
@@ -65,10 +59,17 @@ export const TradingPicks = ({collections}) => {
 				showStatus={false}
 				showThumbs={false}
 			>
-				{collectionsSet.map((collectionSet, index) => (
-					<CollectionSet key={index}>
-						{collectionSet.map((collection) => (
-							<CollectionCard collection={collection} key={collection.name} />
+				{collectionsSet.map((collectionSet, setIndex) => (
+					<CollectionSet key={setIndex}>
+						{collectionSet.map((collection, collectionIndex) => (
+							<CollectionCard
+								collection={collection}
+								key={collection.name}
+								rank={
+									(setIndex * totalCollection) / collectionsSet.length +
+									(collectionIndex + 1)
+								}
+							/>
 						))}
 					</CollectionSet>
 				))}
