@@ -17,6 +17,7 @@ const StyledDiv = styled.div`
 const CollectionSet = styled.div`
 	display: flex;
 	min-height: 350px;
+	justify-content: space-around;
 `;
 
 export const TradingPicks = ({collections}) => {
