@@ -12,3 +12,14 @@ export const sizeBreakpoints = {
 	laptopL: "1440px",
 	desktop: "2560px",
 };
+
+export const screenSize = {
+	large: 1280,
+	medium: 768,
+};
+
+export const picksOnScreen = {
+	small: 1,
+	medium: 3,
+	large: 4,
+};

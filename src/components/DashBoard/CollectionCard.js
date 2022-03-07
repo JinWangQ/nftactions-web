@@ -94,13 +94,27 @@ const CollectionImg = ({img, alt}) => (
 		<StyledDivForCollectionImg src={img} alt={alt} />
 	</StyledDivForImg>
 );
+const Rank = styled.div`
+	color: #fff;
+	text-shadow: 0 0 5px #fff;
+	align-self: flex-start;
+	font-size: 16px;
+`;
+const RankAndETH = styled.div`
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 3px;
+`;
 
-export const CollectionCard = ({collection, id, ref}) => {
+export const CollectionCard = ({collection, rank}) => {
 	const eth = Math.pow(10, 9);
 	return (
-		<StyledDiv ref={ref ? ref : null}>
+		<StyledDiv>
 			<CollectionNameAndETH>
-				<ETH>{collection.total_sales_in_gwei / eth}ETH</ETH>
+				<RankAndETH>
+					<Rank>Rank {rank}</Rank>
+					<ETH>{collection.total_sales_in_gwei / eth}ETH</ETH>
+				</RankAndETH>
 				<LogoAndName>
 					<Logo></Logo>
 					<CollectionName title={collection.name}>
