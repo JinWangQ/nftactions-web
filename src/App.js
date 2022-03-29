@@ -1,5 +1,6 @@
 import React from "react";
 import {Route, Routes} from "react-router-dom";
+import {injectStyle} from "react-toastify/dist/inject-style";
 import styled from "styled-components";
 
 import {About, DashBoard, Header} from "./components";
@@ -10,6 +11,9 @@ const StyledDiv = styled.div`
 	background-color: ${backgroundColor};
 `;
 
+if (typeof window !== "undefined") {
+	injectStyle();
+}
 const App = () => (
 	<StyledDiv>
 		<Header />

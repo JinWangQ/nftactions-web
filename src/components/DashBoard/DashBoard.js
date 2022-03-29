@@ -1,5 +1,6 @@
 import {faRetweet, faSpinner} from "@fortawesome/free-solid-svg-icons";
 import {Fragment, useEffect, useState} from "react";
+import {toast, ToastContainer} from "react-toastify";
 import {TwitterTweetEmbed} from "react-twitter-embed";
 import styled, {keyframes} from "styled-components";
 
@@ -588,24 +589,28 @@ export const DashBoard = () => {
 			// mock tweets will be placed here
 			await Promise.all(
 				names.map((name) => getTweetsByQuery(name, tweetsPerFetch))
-			).then((responses) => {
-				const data = responses.filter(
-					(response) => response?.data && Array.isArray(response?.data)
-				);
+			)
+				.then((responses) => {
+					const data = responses.filter(
+						(response) => response?.data && Array.isArray(response?.data)
+					);
 
-				const tokens = responses.map((response, index) => {
-					return {
-						token: response.meta?.next_token,
-						name: filteredCollections[index].name,
-					};
+					const tokens = responses.map((response, index) => {
+						return {
+							token: response.meta?.next_token,
+							name: filteredCollections[index].name,
+						};
+					});
+					setCurrentNextTokens([...tokens]);
+
+					const arraysOfTweetsArray = [...data.map((data) => data.data)];
+					setCurrentAllTweets(arraysOfTweetsArray);
+					const tweetsSet = removeTweetDuplicates(arraysOfTweetsArray, counts);
+					setData([...tweetsSet]);
+				})
+				.catch((error) => {
+					console.log(error);
 				});
-				setCurrentNextTokens([...tokens]);
-
-				const arraysOfTweetsArray = [...data.map((data) => data.data)];
-				setCurrentAllTweets(arraysOfTweetsArray);
-				const tweetsSet = removeTweetDuplicates(arraysOfTweetsArray, counts);
-				setData([...tweetsSet]);
-			});
 
 			const whitelistMintTweetsResponse = await getTweetsByQuery(
 				whiteListMint,
@@ -716,7 +721,7 @@ export const DashBoard = () => {
 				);
 				setCurrentPageForWhitelist(currentPageForWhitelist + 1);
 			} else {
-				console.log("There is no more tweets");
+				notify("There is no more tweets about Whitelist Mint");
 			}
 		} else {
 			setCurrentPageForWhitelist(currentPageForWhitelist + 1);
@@ -781,7 +786,7 @@ export const DashBoard = () => {
 						);
 						setData([...tweetsSet]);
 					} else {
-						console.log("There is no more tweets");
+						notify("There is no more tweets about Top sales");
 					}
 				});
 			} else {
@@ -790,6 +795,18 @@ export const DashBoard = () => {
 			const tweetsSet = removeTweetDuplicates(currentAllTweets, picksCount);
 			setData([...tweetsSet]);
 		}
+	};
+
+	const notify = (toastString) => {
+		toast.info(toastString, {
+			position: "bottom-center",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
 	};
 
 	return (
@@ -869,6 +886,17 @@ export const DashBoard = () => {
 					<StyledIcon icon={faSpinner} pulse />
 				)}
 			</SocialPicks>
+			<ToastContainer
+				position="bottom-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</StyledMain>
 	);
 };
