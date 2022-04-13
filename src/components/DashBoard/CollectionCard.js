@@ -125,7 +125,7 @@ export const CollectionCard = ({collection, rank}) => {
 			<CollectionImg img={collection.image_url} alt={collection.name} />
 			<SoldAndOwners>
 				<Sold>{collection.count} sold</Sold>
-				<Owners>456 owners</Owners>
+				<Owners>{collection.distinct_buyers} owners</Owners>
 			</SoldAndOwners>
 		</StyledDiv>
 	);

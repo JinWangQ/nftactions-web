@@ -1,3 +1,3 @@
-export const baseUrl = "https://nftactions-go-backend.herokuapp.com/";
+export const baseUrl = "https://opensea-data-backend.herokuapp.com";
 
 export const chartLabelCutOff = 15;
